@@ -2,20 +2,13 @@
 
 import requests
 
-
 class HackerNews:
-    with open('/Users/MorsalNiyaz/Development/polyglot/cohort-1/data/positive_words.txt', 'r') as open_pos:
-        positive_vocab=open_pos.readlines()
-
-    with open('/Users/MorsalNiyaz/Development/polyglot/cohort-1/data/negative_words.txt', 'r') as open_neg:
-        negative_vocab=open_neg.readlines()
-    
     def __init__(self, positive_vocab, negative_vocab):
         self.positive_vocab = positive_vocab
         self.negative_vocab = negative_vocab
 
     
-    def analyze_news(hacker):
+    def analyze_news(self, hacker):
         words = hacker.split()
 
         num_positive_vocab = 0 
@@ -45,6 +38,13 @@ class HackerNews:
   #  print(analyze_news(hacker))
 #
 
+with open('/Users/MorsalNiyaz/Development/polyglot/cohort-1/data/positive_words.txt', 'r') as open_pos:
+    positive_vocab=open_pos.readlines()
+
+with open('/Users/MorsalNiyaz/Development/polyglot/cohort-1/data/negative_words.txt', 'r') as open_neg:
+    negative_vocab=open_neg.readlines()
+
+hn = HackerNews(positive_vocab, negative_vocab)
 
 response = requests.get('https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty')
 
@@ -54,7 +54,7 @@ print(top_five_ids)
 
 
 
-# Fetch top 5 stories
+# Fetch top 5 stories 
 
 stories = []
 
@@ -81,8 +81,10 @@ for story in stories:
         comment = kid_url.json()['text'] #puts the current comment text in a variable
         print(comment)
         comments.append(comment) #adds the comment to the current comment list
+        sentiment = hn.analyze_news(comment)
         title_comments_d[title] = comments #sets key-value pair of title and list of comments
     listOfStories.append(title_comments_d) #add the current dictionary to the listOFStories
+    listOfStories.append(sentiment)
 
 #print results
 for l in listOfStories:
